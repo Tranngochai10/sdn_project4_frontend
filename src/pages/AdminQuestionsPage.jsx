@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchQuestions, createQuestion, updateQuestion, deleteQuestion } from '../store/questionsSlice';
+import Swal from 'sweetalert2';
 
 const EMPTY_FORM = {
   text: '',
@@ -54,14 +55,54 @@ const AdminQuestionsPage = () => {
     };
     if (modalMode === 'create') {
       await dispatch(createQuestion(payload));
+      Swal.fire({
+        title: 'Success!',
+        text: 'Question created successfully.',
+        icon: 'success',
+        confirmButtonColor: '#6366f1',
+        customClass: { popup: 'rounded-4' },
+        timer: 1500,
+        showConfirmButton: false
+      });
     } else {
       await dispatch(updateQuestion({ id: editingId, data: payload }));
+      Swal.fire({
+        title: 'Success!',
+        text: 'Question updated successfully.',
+        icon: 'success',
+        confirmButtonColor: '#6366f1',
+        customClass: { popup: 'rounded-4' },
+        timer: 1500,
+        showConfirmButton: false
+      });
     }
     document.getElementById('closeQModal').click();
   };
 
   const handleDelete = (id) => {
-    if (window.confirm('Delete this question?')) dispatch(deleteQuestion(id));
+    Swal.fire({
+      title: 'Delete this question?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#6b7280',
+      confirmButtonText: 'Yes, delete it!',
+      customClass: {
+        popup: 'rounded-4'
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(deleteQuestion(id));
+        Swal.fire({
+          title: 'Deleted!',
+          text: 'The question has been deleted.',
+          icon: 'success',
+          confirmButtonColor: '#6366f1',
+          customClass: { popup: 'rounded-4' }
+        });
+      }
+    });
   };
 
   const filtered = questions.filter(q =>

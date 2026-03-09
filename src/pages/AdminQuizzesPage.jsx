@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchQuizzes, createQuiz, updateQuiz, deleteQuiz } from '../store/quizzesSlice';
 import { fetchQuestions } from '../store/questionsSlice';
 import { quizAPI } from '../api/api';
+import Swal from 'sweetalert2';
 
 const EMPTY_FORM = { title: '', description: '' };
 const EMPTY_Q = { text: '', options: ['', '', '', ''], correctAnswerIndex: 0, keywords: '' };
@@ -57,28 +58,92 @@ const AdminQuizzesPage = () => {
     e.preventDefault();
     if (modalMode === 'create') {
       await dispatch(createQuiz(quizForm));
+      Swal.fire({
+        title: 'Success!',
+        text: 'Quiz created successfully.',
+        icon: 'success',
+        confirmButtonColor: '#6366f1',
+        customClass: { popup: 'rounded-4' },
+        timer: 1500,
+        showConfirmButton: false
+      });
     } else {
       await dispatch(updateQuiz({ id: editingId, data: quizForm }));
+      Swal.fire({
+        title: 'Success!',
+        text: 'Quiz updated successfully.',
+        icon: 'success',
+        confirmButtonColor: '#6366f1',
+        customClass: { popup: 'rounded-4' },
+        timer: 1500,
+        showConfirmButton: false
+      });
     }
     document.getElementById('closeQuizModal').click();
     dispatch(fetchQuizzes());
   };
 
   const handleDelete = (id) => {
-    if (window.confirm('Delete this quiz and all its questions?')) {
-      dispatch(deleteQuiz(id));
-    }
+    Swal.fire({
+      title: 'Delete this quiz?',
+      text: "All its questions will also be deleted from the quiz (but not from the question bank). You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#6b7280',
+      confirmButtonText: 'Yes, delete it!',
+      customClass: {
+        popup: 'rounded-4'
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(deleteQuiz(id));
+        Swal.fire({
+          title: 'Deleted!',
+          text: 'The quiz has been deleted.',
+          icon: 'success',
+          confirmButtonColor: '#6366f1',
+          customClass: { popup: 'rounded-4' }
+        });
+      }
+    });
   };
 
   const handleRemoveQuestion = async (quizId, questionId) => {
-    if (!window.confirm('Remove this question from the quiz?')) return;
+    const result = await Swal.fire({
+      title: 'Remove question?',
+      text: "This question will be removed from this quiz.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#6b7280',
+      confirmButtonText: 'Yes, remove it!',
+      customClass: { popup: 'rounded-4' }
+    });
+    
+    if (!result.isConfirmed) return;
     
     setRemoveQLoading(questionId);
     try {
       await quizAPI.removeExistingQuestion(quizId, questionId);
       dispatch(fetchQuizzes()); // Refresh quiz list to update question counts and data
+      Swal.fire({
+        title: 'Removed!',
+        text: 'The question has been removed from the quiz.',
+        icon: 'success',
+        confirmButtonColor: '#6366f1',
+        customClass: { popup: 'rounded-4' },
+        timer: 1500,
+        showConfirmButton: false
+      });
     } catch (err) {
-      alert(err.response?.data?.message || 'Failed to remove question');
+      Swal.fire({
+        title: 'Error!',
+        text: err.response?.data?.message || 'Failed to remove question',
+        icon: 'error',
+        confirmButtonColor: '#ef4444',
+        customClass: { popup: 'rounded-4' }
+      });
     } finally {
       setRemoveQLoading(null);
     }
