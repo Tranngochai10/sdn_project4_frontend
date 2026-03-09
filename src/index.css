@@ -1,0 +1,114 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: #f8f9fa;
+}
+
+/* ── Cards ── */
+.quiz-card {
+  border: none;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,.08);
+  transition: transform .2s ease, box-shadow .2s ease;
+  overflow: hidden;
+}
+.quiz-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 28px rgba(99,102,241,.18);
+}
+
+/* ── Auth pages ── */
+.auth-container {
+  min-height: calc(100vh - 70px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+.auth-card {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 8px 40px rgba(99,102,241,.15);
+  padding: 2.5rem 2rem;
+  width: 100%;
+  max-width: 420px;
+}
+.auth-card .brand-icon {
+  font-size: 3rem;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ── Gradient button ── */
+.btn-primary-gradient {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  border-radius: 10px;
+  transition: opacity .2s;
+}
+.btn-primary-gradient:hover { opacity: .88; color: #fff; }
+
+/* ── Quiz progress bar ── */
+.quiz-progress .progress {
+  height: 8px;
+  border-radius: 99px;
+}
+.quiz-progress .progress-bar {
+  background: linear-gradient(90deg, #6366f1, #8b5cf6);
+  border-radius: 99px;
+}
+
+/* ── Option radio cards ── */
+.option-card {
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  padding: .75rem 1rem;
+  cursor: pointer;
+  transition: border-color .15s, background .15s;
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  margin-bottom: .5rem;
+}
+.option-card:has(input:checked) {
+  border-color: #6366f1;
+  background: #eef2ff;
+}
+.option-card input[type="radio"] { accent-color: #6366f1; }
+.option-card.correct { border-color: #22c55e; background: #f0fdf4; }
+.option-card.wrong   { border-color: #ef4444; background: #fef2f2; }
+
+/* ── Score banner ── */
+.score-banner {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  color: white;
+  border-radius: 16px;
+  padding: 2rem;
+  text-align: center;
+}
+
+/* ── Table admin ── */
+.admin-table th { background: #f1f5f9; font-weight: 600; }
+
+/* ── Page header ── */
+.page-header {
+  padding: 2rem 0 1rem;
+  border-bottom: 1px solid #e2e8f0;
+  margin-bottom: 2rem;
+}
+
+/* ── Spinner overlay ── */
+.spinner-overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40vh;
+}
